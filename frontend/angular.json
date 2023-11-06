@@ -6,11 +6,10 @@
     "frontend": {
       "projectType": "application",
       "schematics": {
-        "@schematics/angular:component": {
-          "inlineStyle": true,
+        "@schematics/angular:class": {
           "skipTests": true
         },
-        "@schematics/angular:class": {
+        "@schematics/angular:component": {
           "skipTests": true
         },
         "@schematics/angular:directive": {
@@ -120,5 +119,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

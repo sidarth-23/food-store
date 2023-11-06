@@ -1,0 +1,16 @@
+<app-title title="Cart Page" margin="1.5rem 0 0 2.5rem"></app-title>
+<div class="container">
+  <ul>
+    <li *ngFor="let cartItem of cart.item">
+      <div>
+        <img [src]="cartItem.food.imageUrl" [alt]="cartItem.food.name" />
+      </div>
+      <div>
+        <a routerLink="/food/{{ cartItem.food.id }}">{{
+          cartItem.food.name
+        }}</a>
+      </div>
+      <select #quantitySelect [value]="cartItem.quantity" (change)="changeQuantit"></select>
+    </li>
+  </ul>
+</div>
