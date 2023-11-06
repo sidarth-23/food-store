@@ -5,12 +5,14 @@ import { Tag } from 'src/app/shared/models/Tag';
 @Component({
   selector: 'app-tags',
   templateUrl: './tags.component.html',
-  styleUrls: ['./tags.component.css']
+  styleUrls: ['./tags.component.css'],
 })
 export class TagsComponent {
-  tags?:Tag[];
+  tags?: Tag[];
 
-  constructor(foodService: FoodService){
-    this.tags = foodService.getAllTags()
+  constructor(foodService: FoodService) {
+    foodService.getAllTags().subscribe((serverTags) => {
+      this.tags = serverTags;
+    });
   }
 }
