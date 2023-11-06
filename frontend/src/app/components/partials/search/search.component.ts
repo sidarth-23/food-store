@@ -15,9 +15,9 @@ export class SearchComponent {
     });
   }
 
-  search(term: string):void {
-    if(term) {
-      this.router.navigateByUrl('/search'+ term)
+  search(term: string): void {
+    if (term) {
+      this.router.navigateByUrl('/search/' + term);
     }
   }
 }
