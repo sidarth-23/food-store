@@ -10,7 +10,7 @@
           cartItem.food.name
         }}</a>
       </div>
-      <select #quantitySelect [value]="cartItem.quantity" (change)="changeQuantit"></select>
+      <select #quantitySelect [value]="cartItem.quantity" (change)="changeQuantity(cartItem, quantitySelect.value)"></select>
     </li>
   </ul>
 </div>
