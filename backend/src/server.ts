@@ -1,4 +1,3 @@
-import { environment } from "./../../frontend/src/environments/environment.development"
 import dotenv from "dotenv"
 dotenv.config()
 import path from "path"
