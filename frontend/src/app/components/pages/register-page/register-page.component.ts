@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { IUserRegister } from 'src/app/shared/interfaces/IuserRegister'; 
 import { PasswordsMatchValidator } from 'src/app/shared/validators/password_match_validator';
+import { PasswordStrengthValidator } from 'src/app/shared/validators/password_strength_validator';
 
 @Component({
   selector: 'app-register-page',
@@ -25,9 +26,9 @@ export class RegisterPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(5)]],
+      name: ['', [Validators.required, Validators.minLength(5), Validators.pattern('[a-zA-Z]*')]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(5)]],
+      password: ['', [Validators.required, Validators.minLength(5), PasswordStrengthValidator()]],
       confirmPassword: ['', Validators.required],
       address: ['', [Validators.required, Validators.minLength(10)]]
     },{
