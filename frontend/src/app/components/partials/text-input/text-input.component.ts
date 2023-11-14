@@ -17,6 +17,8 @@ export class TextInputComponent {
   type: 'text' | 'password' | 'email' = 'text';
   @Input()
   max!: string
+  @Input()
+  disabled: boolean = false
 
   get formControl() {
     return this.control as FormControl;

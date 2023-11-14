@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="details">
+    <app-title title="Update details"></app-title>
+    <form [formGroup]="profileForm" (ngSubmit)="submit()">
+      <text-input
+        [control]="fc.name"
+        [showErrorsWhen]="fc.name.touched"
+        label="Name"
+        max="15"
+      ></text-input>
+      <text-input
+        [control]="fc.address"
+        [showErrorsWhen]="fc.address.touched"
+        label="Address"
+        max="50"
+      ></text-input>
+      <default-button text="Update Details"></default-button>
+    </form>
+  </div>
+</div>
+

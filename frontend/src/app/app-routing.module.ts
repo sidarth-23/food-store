@@ -8,6 +8,8 @@ import { RegisterPageComponent } from './components/pages/register-page/register
 import { CheckoutPageComponent } from './components/pages/checkout-page/checkout-page.component';
 import { authGuard } from './auth/guard/auth.guard';
 import { PaymentsPageComponent } from './components/pages/payments-page/payments-page.component';
+import { OrdersPageComponent } from './components/pages/orders-page/orders-page.component';
+import { ProfilePageComponent } from './components/pages/profile-page/profile-page.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -17,6 +19,8 @@ const routes: Routes = [
   { path: 'cart-page', component: CartPageComponent, canActivate: [authGuard] },
   { path: 'login', component: LoginPageComponent },
   { path: 'register', component: RegisterPageComponent },
+  {path: 'orders', component: OrdersPageComponent, canActivate: [authGuard]},
+  {path: 'profile', component: ProfilePageComponent, canActivate: [authGuard]},
   {
     path: 'checkout',
     component: CheckoutPageComponent,
