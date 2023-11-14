@@ -17,5 +17,26 @@
       <default-button text="Update Details"></default-button>
     </form>
   </div>
+  <div class="details">
+    <app-title title="Update password"></app-title>
+    <form [formGroup]="passForm" (ngSubmit)="submitPass()">
+      <text-input
+        [control]="passForm.controls.password"
+        [showErrorsWhen]="passForm.controls.password.touched"
+        label="Password"
+        type="password"
+        max="20"
+      ></text-input>
+      <text-input
+        [control]="passForm.controls.confirmPass"
+        [showErrorsWhen]="passForm.controls.confirmPass.touched"
+        label="Confirm Password"
+        type="password"
+        max="20"
+      ></text-input>
+      <input type="hidden" formControlName="email">
+      <default-button text="Update Password"></default-button>
+    </form>
+  </div>
 </div>
 

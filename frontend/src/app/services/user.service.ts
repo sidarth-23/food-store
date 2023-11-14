@@ -10,10 +10,16 @@ import {
   USER_REGISTER_URL,
   USER_GET_URL,
   USER_UPDATE_URL,
+  USER_UPDATE_PASS,
 } from '../shared/constants/urls';
 import { IUserUpdate } from '../shared/interfaces/IUserUpdate';
 
 const USER_KEY = 'User';
+
+interface PassChange {
+  email: string;
+  password: string
+}
 
 @Injectable({
   providedIn: 'root',
@@ -70,6 +76,20 @@ export class UserService {
 
   updateUser(userUpdate: IUserUpdate): Observable<any> {
     return this.http.post<any>(USER_UPDATE_URL, userUpdate).pipe(
+      tap({
+        next: (updatedUser) => {
+          this.setUserAndNotify(updatedUser);
+          this.toastrService.success('User updated successfully. Relogin to see the updated changes');
+        },
+        error: (err) => {
+          this.toastrService.error(err.error, 'Update Failed');
+        },
+      })
+    );
+  }
+
+  updatePass(userLogin: PassChange): Observable<any> {
+    return this.http.post<any>(USER_UPDATE_PASS, userLogin).pipe(
       tap({
         next: (updatedUser) => {
           this.setUserAndNotify(updatedUser);

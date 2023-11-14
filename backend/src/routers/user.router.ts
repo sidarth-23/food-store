@@ -85,6 +85,23 @@ router.post(
   })
 );
 
+router.post(
+  "/updatePass",
+  asyncHandler(async (req, res) => {
+    const { password, email } = req.body;
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      res.status(HTTP_BAD_REQUEST).send("User not found. Please try again!");
+      return;
+    }
+
+    const encryptedPassword = await bcrypt.hash(password, 10);
+
+    const dbUser = await UserModel.updateOne({email}, {password: encryptedPassword});
+    res.send(dbUser);
+  })
+);
+
 const generateTokenReponse = (user: User) => {
   const token = jwt.sign(
     {
