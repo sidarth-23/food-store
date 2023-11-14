@@ -73,7 +73,7 @@ export class UserService {
       tap({
         next: (updatedUser) => {
           this.setUserAndNotify(updatedUser);
-          this.toastrService.success('User updated successfully');
+          this.toastrService.success('User updated successfully. Relogin to see the updated changes');
         },
         error: (err) => {
           this.toastrService.error(err.error, 'Update Failed');

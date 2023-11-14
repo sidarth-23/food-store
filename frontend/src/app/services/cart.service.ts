@@ -3,6 +3,7 @@ import { Cart } from '../shared/models/Cart';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Food } from '../shared/models/Food';
 import { CartItem } from '../shared/models/CartItem';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class CartService {
   private cart: Cart = this.getCartFromLocalStorage();
   private cartSubject: BehaviorSubject<Cart> = new BehaviorSubject(this.cart);
 
-  constructor() {}
+  constructor(private toastrService: ToastrService) {}
 
   addToCart(food: Food): void {
     let cartItem = this.cart.item.find((item) => item.food.id === food.id);
@@ -19,11 +20,13 @@ export class CartService {
       return;
     }
     this.cart.item.push(new CartItem(food));
+    this.toastrService.success('Item successfully added to cart', 'Item Added')
     this.setCartToLocalStorage();
   }
 
   removeFromCart(foodId: string): void {
     this.cart.item = this.cart.item.filter((item) => item.food.id != foodId);
+    this.toastrService.warning('Item deleted from cart', 'Item Removed')
     this.setCartToLocalStorage();
   }
 
