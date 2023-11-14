@@ -4,31 +4,36 @@
     <form [formGroup]="registerForm" (ngSubmit)="submit()">
       <text-input
         [control]="fc.name"
-        [showErrorsWhen]="isSubmitted"
+        [showErrorsWhen]="fc.name.touched"
         label="Name"
+        max="15"
       ></text-input>
       <text-input
         [control]="fc.email"
-        [showErrorsWhen]="isSubmitted"
+        [showErrorsWhen]="fc.email.touched"
         label="Email"
         type="email"
+        max="20"
       ></text-input>
       <text-input
         [control]="fc.password"
-        [showErrorsWhen]="isSubmitted"
+        [showErrorsWhen]="fc.password.touched"
         label="Password"
         type="password"
+        max="20"
       ></text-input>
       <text-input
         [control]="fc.confirmPassword"
-        [showErrorsWhen]="isSubmitted"
+        [showErrorsWhen]="fc.confirmPassword.touched"
         label="Confirm Password"
         type="password"
+        max="20"
       ></text-input>
       <text-input
         [control]="fc.address"
-        [showErrorsWhen]="isSubmitted"
+        [showErrorsWhen]="fc.address.touched"
         label="Address"
+        max="50"
       ></text-input>
       <default-button text="Register"></default-button>
 

@@ -42,7 +42,15 @@ export class CheckoutPageComponent implements OnInit {
 
   createOrder() {
     if (this.checkoutForm.invalid) {
-      this.toastrService.warning('Please fill the inputs', 'Invalid Inputs');
+      let message: string = ''
+      if (this.fc.name.invalid) {
+        message = 'Please fill the name field'
+      } else if (this.fc.address.invalid){
+        message = 'Please fill the address field'
+      } else {
+        message = 'Please fill both the fields'
+      }
+      this.toastrService.warning(message, 'Invalid Inputs');
       return;
     }
 

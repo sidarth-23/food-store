@@ -15,6 +15,8 @@ export class TextInputComponent {
   label!: string;
   @Input()
   type: 'text' | 'password' | 'email' = 'text';
+  @Input()
+  max!: string
 
   get formControl() {
     return this.control as FormControl;
