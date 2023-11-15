@@ -23,7 +23,7 @@ ul {
   color: #e72929;
 }
 
-.card:hover {
+.card a:hover {
   opacity: 0.9;
   cursor: pointer;
 }
