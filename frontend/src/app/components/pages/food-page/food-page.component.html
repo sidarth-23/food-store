@@ -11,7 +11,7 @@
       <span class="name">
         {{ food.name }}
       </span>
-      <span class="favorite" [ngClass]="{ not: food.favorite }"> ❤ </span>
+      <span *ngIf="favouriteShown" class="favorite" [ngClass]="{ not: !isFavorite(food.id)}" (click)="onClickFavourite(food.id)"> ❤ </span>
     </div>
     <div class="rating">
       <star-rating [stars]="food.stars"></star-rating>

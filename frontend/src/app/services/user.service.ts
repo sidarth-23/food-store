@@ -19,21 +19,21 @@ const USER_KEY = 'User';
 
 interface PassChange {
   email: string;
-  password: string
+  password: string;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  user: User = this.GetUserFromLocalStorage()
-  private userSubject = new BehaviorSubject<User>(
-    this.user
-  );
+  private userSubject = new BehaviorSubject<User>(new User());
   public userObservable: Observable<User>;
 
   constructor(private http: HttpClient, private toastrService: ToastrService) {
     this.userObservable = this.userSubject.asObservable();
+
+    const initialUser = this.GetUserFromLocalStorage();
+    this.userSubject.next(initialUser);
   }
 
   public get currentUser(): User {
@@ -80,7 +80,9 @@ export class UserService {
       tap({
         next: (updatedUser) => {
           this.setUserAndNotify(updatedUser);
-          this.toastrService.success('User updated successfully. Relogin to see the updated changes');
+          this.toastrService.success(
+            'User updated successfully. Relogin to see the updated changes'
+          );
         },
         error: (err) => {
           this.toastrService.error(err.error, 'Update Failed');
@@ -94,7 +96,9 @@ export class UserService {
       tap({
         next: (updatedUser) => {
           this.setUserAndNotify(updatedUser);
-          this.toastrService.success('User updated successfully. Relogin to see the updated changes');
+          this.toastrService.success(
+            'User updated successfully. Relogin to see the updated changes'
+          );
         },
         error: (err) => {
           this.toastrService.error(err.error, 'Update Failed');
@@ -104,14 +108,19 @@ export class UserService {
   }
 
   toggleFavourites(foodId: string, userId: string): Observable<User> {
-    return this.http.post<User>(TOGGLE_FAVOURITES_URL, {foodId, userId} ).pipe(
+    return this.http.post<User>(TOGGLE_FAVOURITES_URL, { foodId, userId }).pipe(
       tap({
-        next: (updatedUser) => {
+        next: (item) => {
+          const updatedUser = this.GetUserFromLocalStorage();
+          updatedUser.favorites = item.favorites
           this.setUserAndNotify(updatedUser);
           this.toastrService.success('Favorite status updated successfully.');
         },
         error: (error) => {
-          this.toastrService.error(error.error, 'Failed to update favorite status');
+          this.toastrService.error(
+            error.error,
+            'Failed to update favorite status'
+          );
         },
       })
     );
@@ -132,11 +141,16 @@ export class UserService {
     const currentUser = { ...this.userSubject.value };
     const updatedUser = { ...currentUser, ...user };
     localStorage.setItem(USER_KEY, JSON.stringify(updatedUser));
-    this.userSubject.next(updatedUser)
+    this.userSubject.next(updatedUser);
   }
 
   private GetUserFromLocalStorage(): User {
     const userJson = localStorage.getItem(USER_KEY);
-    return userJson ? JSON.parse(userJson) as User : new User();
+    const user = userJson ? (JSON.parse(userJson) as User) : new User();
+
+    // Make sure to set the userSubject after the user object is fully initialized
+    this.userSubject.next(user);
+
+    return user;
   }
 }

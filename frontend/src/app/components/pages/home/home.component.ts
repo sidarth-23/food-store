@@ -41,20 +41,19 @@ export class HomeComponent implements OnInit{
 
   ngOnInit(): void {
     this.favouriteShown = this.userService.currentUser.token ? true : false
-    this.favourites = this.userService.currentUser.favourites || [];
-    console.log(this.favourites)
+    this.favourites = this.userService.currentUser.favorites
   }
 
   isFavorite(foodId: string): boolean {
-    return this.favourites.includes(foodId) || false;
+    return this.favourites?.includes(foodId) || false;
   }
 
-  onClickFavourite(id: string) {
+  onClickFavourite(id: string, event: Event) {
+    event.stopPropagation()
     const userId = this.userService.currentUser.id
     this.userService.toggleFavourites(id,userId).subscribe(
       (updatedUser) => {
-        console.log('updatedUser',updatedUser)
-        this.favourites = updatedUser.favourites;
+        this.favourites = updatedUser.favorites;
       },
       (error) => {
         console.error('Failed to toggle favorite:', error);
