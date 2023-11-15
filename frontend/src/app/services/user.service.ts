@@ -11,6 +11,7 @@ import {
   USER_GET_URL,
   USER_UPDATE_URL,
   USER_UPDATE_PASS,
+  TOGGLE_FAVOURITES_URL,
 } from '../shared/constants/urls';
 import { IUserUpdate } from '../shared/interfaces/IUserUpdate';
 
@@ -102,22 +103,36 @@ export class UserService {
     );
   }
 
+  toggleFavourites(foodId: string, userId: string): Observable<User> {
+    return this.http.post<User>(TOGGLE_FAVOURITES_URL, {foodId, userId} ).pipe(
+      tap({
+        next: (updatedUser) => {
+          this.setUserAndNotify(updatedUser);
+          this.toastrService.success('Favorite status updated successfully.');
+        },
+        error: (error) => {
+          this.toastrService.error(error.error, 'Failed to update favorite status');
+        },
+      })
+    );
+  }
+
   logout() {
     this.userSubject.next(new User());
     localStorage.removeItem(USER_KEY);
     window.location.reload();
   }
 
-  private setUserAndNotify(userUpdates: Partial<User>) {
-    const currentUser = { ...this.userSubject.value };
-    const updatedUser = { ...currentUser, ...userUpdates };
+  private setUserAndNotify(updatedUser: User) {
     this.setUserToLocalStorage(updatedUser);
     this.userSubject.next(updatedUser);
   }
 
   private setUserToLocalStorage(user: User) {
-    this.user = user
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
+    const currentUser = { ...this.userSubject.value };
+    const updatedUser = { ...currentUser, ...user };
+    localStorage.setItem(USER_KEY, JSON.stringify(updatedUser));
+    this.userSubject.next(updatedUser)
   }
 
   private GetUserFromLocalStorage(): User {

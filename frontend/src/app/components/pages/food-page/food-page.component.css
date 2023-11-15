@@ -111,3 +111,8 @@
     opacity: 0.9;
     cursor: pointer;
   }
+
+  button:disabled {
+    color: black;
+    background-color: gray;
+  }

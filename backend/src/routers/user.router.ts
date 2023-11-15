@@ -54,6 +54,7 @@ router.post(
       password: encryptedPassword,
       address,
       isAdmin: false,
+      favorites: []
     };
 
     const dbUser = await UserModel.create(newUser);
@@ -61,13 +62,13 @@ router.post(
   })
 );
 
-router.get('/user', asyncHandler(async(req: any, res) => {
-  const user = UserModel.findOne({id: req.user.id})
+router.get('/user', asyncHandler(async (req: any, res) => {
+  const user = await UserModel.findById(req.user.id);
   if (!user) {
     res.status(HTTP_BAD_REQUEST).send("User not found. Please try again!");
     return;
   }
-  res.send(user)
+  res.send(user);
 }))
 
 router.post(
@@ -101,6 +102,31 @@ router.post(
     res.send(dbUser);
   })
 );
+
+router.post(
+  "/editFavourite",
+  asyncHandler(async (req: any, res) => {
+    const { foodId, userId } = req.body;
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      res.status(HTTP_BAD_REQUEST).send("User not found. Please try again!");
+      return;
+    }
+
+    const index = user.favorites.indexOf(foodId);
+    if (index === -1) {
+      user.favorites.push(foodId);
+      await user.save();
+    } else {
+      user.favorites.splice(index, 1);
+      await user.save();
+    }
+
+    res.send(user);
+  })
+);
+
 
 const generateTokenReponse = (user: User) => {
   const token = jwt.sign(
