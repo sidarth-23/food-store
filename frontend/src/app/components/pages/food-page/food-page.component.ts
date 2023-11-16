@@ -13,6 +13,8 @@ import { Food } from 'src/app/shared/models/Food';
 export class FoodPageComponent implements OnInit{
   food!: Food;
   btnState!: boolean
+  favourites!: string[]
+  favouriteShown: boolean = false
   constructor(
     activatedRoute: ActivatedRoute,
     foodService: FoodService,
@@ -30,10 +32,28 @@ export class FoodPageComponent implements OnInit{
 
   ngOnInit(): void {
     this.btnState = this.userService.currentUser.token ? false : true
+    this.favouriteShown = this.userService.currentUser.token ? true : false
+    this.favourites = this.userService.currentUser.favorites
   }
 
   addToCart() {
     this.cartService.addToCart(this.food);
     this.router.navigateByUrl('/');
+  }
+
+  isFavorite(foodId: string): boolean {
+    return this.favourites?.includes(foodId) || false;
+  }
+
+  onClickFavourite(id: string) {
+    const userId = this.userService.currentUser.id
+    this.userService.toggleFavourites(id,userId).subscribe(
+      (updatedUser) => {
+        this.favourites = updatedUser.favorites;
+      },
+      (error) => {
+        console.error('Failed to toggle favorite:', error);
+      }
+    );
   }
 }

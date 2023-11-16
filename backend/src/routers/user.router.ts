@@ -115,15 +115,16 @@ router.post(
     }
 
     const index = user.favorites.indexOf(foodId);
+    let itemToSend
     if (index === -1) {
       user.favorites.push(foodId);
-      await user.save();
+      itemToSend = await user.save();
     } else {
       user.favorites.splice(index, 1);
-      await user.save();
+      itemToSend = await user.save();
     }
 
-    res.send(user);
+    res.send(itemToSend);
   })
 );
 
@@ -147,6 +148,7 @@ const generateTokenReponse = (user: User) => {
     name: user.name,
     address: user.address,
     isAdmin: user.isAdmin,
+    favorites: user.favorites,
     token: token,
   };
 };
