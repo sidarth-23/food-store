@@ -7,6 +7,7 @@
         [showErrorsWhen]="fc.name.touched"
         label="Name"
         max="20"
+        spanElement="*"
       ></text-input>
       <text-input
         [control]="fc.email"
@@ -14,6 +15,7 @@
         label="Email"
         type="email"
         max="30"
+        spanElement="*"
       ></text-input>
       <text-input
         [control]="fc.password"
@@ -21,6 +23,7 @@
         label="Password"
         type="password"
         max="30"
+        spanElement="*"
       ></text-input>
       <text-input
         [control]="fc.confirmPassword"
@@ -28,13 +31,19 @@
         label="Confirm Password"
         type="password"
         max="30"
+        spanElement="*"
       ></text-input>
       <text-input
         [control]="fc.address"
         [showErrorsWhen]="fc.address.touched"
         label="Address"
         max="50"
+        spanElement="*"
       ></text-input>
+      <div class="info">
+        <p><span class="asterix">*</span> Required</p>
+        <p><span class="asterix">Note</span> : Password must contain a caps, small letter, symbol and number</p>
+      </div>
       <default-button text="Register"></default-button>
 
       <div class="login">

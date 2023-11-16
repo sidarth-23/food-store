@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit{
   favouriteShown: boolean = false
   foods: Food[] = [];
   favourites!: string[]
+  currentUser! : string
 
   constructor(
     private foodService: FoodService,
@@ -28,7 +29,10 @@ export class HomeComponent implements OnInit{
         );
       } else if (params.tag) {
         foodsObservable = this.foodService.getAllFoodsByTag(params.tag);
-      } else {
+      } else if (activatedRoute.snapshot.url.toString().includes('favorites')) {
+        foodsObservable = this.foodService.getAllFoodsById(this.userService.currentUser.favorites)
+      }
+       else {
         foodsObservable = foodService.getAll();
       }
 
@@ -41,6 +45,7 @@ export class HomeComponent implements OnInit{
   ngOnInit(): void {
     this.favouriteShown = this.userService.currentUser.token ? true : false
     this.favourites = this.userService.currentUser.favorites
+    this.currentUser = this.userService.currentUser.id
   }
 
   isFavorite(foodId: string): boolean {

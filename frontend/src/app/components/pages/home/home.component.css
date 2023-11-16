@@ -96,3 +96,24 @@ ul {
   margin-top: 0.7rem;
   font-size: 1.1rem;
 }
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+.container a{
+  height: 3rem;
+  width: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    background-color: #e72929;
+    opacity: 0.8;
+    color: white;
+    border-radius: 1rem;
+}
