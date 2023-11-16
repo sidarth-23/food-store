@@ -1,13 +1,16 @@
 import {
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
+  Output,
   ViewChild,
 } from '@angular/core';
 import {
   LatLng,
   LatLngExpression,
+  LatLngLiteral,
   LatLngTuple,
   LeafletMouseEvent,
   Map,
@@ -19,6 +22,7 @@ import {
 } from 'leaflet';
 import { LocationService } from 'src/app/services/location.service';
 import { Order } from 'src/app/shared/models/Order';
+import {latLng} from 'leaflet';
 
 @Component({
   selector: 'map',
@@ -26,6 +30,7 @@ import { Order } from 'src/app/shared/models/Order';
   styleUrls: ['./map.component.css'],
 })
 export class MapComponent implements OnChanges {
+  @Output() locationClicked: EventEmitter<LatLng> = new EventEmitter<LatLng>();
   @Input()
   order!: Order;
   @Input()
@@ -80,21 +85,24 @@ export class MapComponent implements OnChanges {
 
     this.map.on('click', (e: LeafletMouseEvent) => {
       this.setMarker(e.latlng);
+      this.locationClicked.emit(e.latlng);
     });
   }
 
   findMyLocation() {
     this.locationService.getCurrentLocation().subscribe({
-      next: (latlng) => {
+      next: (latlngLiteral: LatLngLiteral) => {
+        const latlng: LatLng = latLng(latlngLiteral.lat, latlngLiteral.lng);
         this.map.setView(latlng, this.MARKER_ZOOM_LEVEL);
         this.setMarker(latlng);
+        this.locationClicked.emit(latlng);
       },
     });
   }
 
   setMarker(latlng: LatLngExpression) {
     this.addressLatLng = latlng as LatLng;
-
+    this.locationClicked.emit(this.addressLatLng)
     if (this.currentMarker) {
       this.currentMarker.setLatLng(latlng);
       return;
@@ -116,7 +124,6 @@ export class MapComponent implements OnChanges {
     latlng.lat = parseFloat(latlng.lat.toFixed(8));
     latlng.lng = parseFloat(latlng.lng.toFixed(8));
     this.order.addressLatLng = latlng;
-    console.log(this.order.addressLatLng);
   }
 
   get addressLatLng() {

@@ -19,6 +19,9 @@ export class TextInputComponent {
   max!: string
   @Input()
   disabled: boolean = false
+  @Input()
+  spanElement: string = ''
+
 
   get formControl() {
     return this.control as FormControl;
