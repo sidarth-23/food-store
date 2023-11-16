@@ -6,40 +6,62 @@
         [control]="fc.name"
         [showErrorsWhen]="fc.name.touched"
         label="Name"
-        max="15"
+        max="30"
+        spanElement="*"
       ></text-input>
       <text-input
         [control]="fc.email"
         [showErrorsWhen]="fc.email.touched"
         label="Email"
         type="email"
-        max="20"
+        max="40"
+        spanElement="*"
       ></text-input>
       <text-input
         [control]="fc.password"
         [showErrorsWhen]="fc.password.touched"
         label="Password"
         type="password"
-        max="20"
+        max="40"
+        spanElement="*"
       ></text-input>
       <text-input
         [control]="fc.confirmPassword"
         [showErrorsWhen]="fc.confirmPassword.touched"
         label="Confirm Password"
         type="password"
-        max="20"
+        max="40"
+        spanElement="*"
       ></text-input>
       <text-input
         [control]="fc.address"
         [showErrorsWhen]="fc.address.touched"
         label="Address"
-        max="50"
+        max="100"
+        spanElement="*"
       ></text-input>
+      <div class="info">
+        <p><span class="important">* </span>Required</p>
+        <div class="password-info">
+          <p>
+            <span class="important">NOTE</span> : Password field required
+            already 1 of
+          </p>
+          <ul>
+            <li>Caps</li>
+            <li>Small Letter</li>
+            <li>Symbol</li>
+            <li>Number</li>
+          </ul>
+        </div>
+      </div>
       <default-button text="Register"></default-button>
 
       <div class="login">
         Already a user? &nbsp;
-        <a routerLink="/login" [queryParams]="{returnUrl: returnUrl}">Login Here</a>
+        <a routerLink="/login" [queryParams]="{ returnUrl: returnUrl }"
+          >Login Here</a
+        >
       </div>
     </form>
   </div>

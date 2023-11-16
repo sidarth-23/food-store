@@ -7,7 +7,7 @@
     </form>
     <order-items-list [order]="order"></order-items-list>
   </div>
-  <div class="map">
+  <div *ngIf="order.addressLatLng" class="map">
     <app-title title="Choose Your Address On Map" fontSize="1.6rem"></app-title>
     <map (locationClicked)="onLocationClicked($event)" [order]="order"></map>
   </div>

@@ -8,7 +8,7 @@ import { Food } from '../shared/models/Food';
 import { sample_foods, sample_tags } from 'src/data';
 import { Tag } from '../shared/models/Tag';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { FOODS_BY_SEARCH_URL, FOODS_URL } from '../shared/constants/urls';
 
 @Injectable({
@@ -37,5 +37,13 @@ export class FoodService {
 
   getFoodById(foodId: string) {
     return this.http.get<Food>(FOODS_BY_ID_URL + foodId);
+  }
+
+  getAllFoodsById(ids: string[]): Observable<Food[]> {
+    const observables: Observable<Food>[] = [];
+
+    ids.forEach(item => observables.push(this.getFoodById(item)));
+
+    return forkJoin(observables);
   }
 }

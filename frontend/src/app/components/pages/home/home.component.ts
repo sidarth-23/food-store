@@ -11,10 +11,10 @@ import { User } from 'src/app/shared/models/User';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit{
-  favouriteShown: boolean = false
+export class HomeComponent implements OnInit {
+  favouriteShown: boolean = false;
   foods: Food[] = [];
-  favourites!: string[]
+  favourites!: string[];
 
   constructor(
     private foodService: FoodService,
@@ -29,6 +29,10 @@ export class HomeComponent implements OnInit{
         );
       } else if (params.tag) {
         foodsObservable = this.foodService.getAllFoodsByTag(params.tag);
+      } else if (activatedRoute.snapshot.url.toString().includes('favorites')) {
+        foodsObservable = this.foodService.getAllFoodsById(
+          this.userService.currentUser.favorites
+        );
       } else {
         foodsObservable = foodService.getAll();
       }
@@ -40,8 +44,8 @@ export class HomeComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.favouriteShown = this.userService.currentUser.token ? true : false
-    this.favourites = this.userService.currentUser.favorites
+    this.favouriteShown = this.userService.currentUser.token ? true : false;
+    this.favourites = this.userService.currentUser.favorites;
   }
 
   isFavorite(foodId: string): boolean {
@@ -49,11 +53,14 @@ export class HomeComponent implements OnInit{
   }
 
   onClickFavourite(id: string, event: Event) {
-    event.stopPropagation()
-    const userId = this.userService.currentUser.id
-    this.userService.toggleFavourites(id,userId).subscribe(
+    event.stopPropagation();
+    const userId = this.userService.currentUser.id;
+    this.userService.toggleFavourites(id, userId).subscribe(
       (updatedUser) => {
         this.favourites = updatedUser.favorites;
+        if (!this.favourites.includes(id)) {
+          this.foods = this.foods.filter((food) => food.id !== id);
+        }
       },
       (error) => {
         console.error('Failed to toggle favorite:', error);

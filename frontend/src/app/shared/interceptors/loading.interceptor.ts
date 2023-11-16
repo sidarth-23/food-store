@@ -8,6 +8,7 @@ import {
 } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { LoadingService } from 'src/app/services/loading.service';
+import { TOGGLE_FAVOURITES_URL } from '../constants/urls';
 
 var pendingRequests = 0;
 @Injectable()
@@ -18,6 +19,9 @@ export class LoadingInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
+    if (request.url === TOGGLE_FAVOURITES_URL) {
+      return next.handle(request);
+    }
     this.loadingService.showLoading();
     pendingRequests += 1;
     return next.handle(request).pipe(

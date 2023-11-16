@@ -38,6 +38,12 @@ export class CheckoutPageComponent implements OnInit {
       name: [name, [Validators.required]],
       address: [address, [Validators.required]],
     });
+    this.locationService.getLocationFromAddress(address).subscribe((res) => {
+      const temp = res.results[0].geometry.location;
+      const lat = temp.lat;
+      const lng = temp.lng;
+      this.order.addressLatLng = new LatLng(lat, lng);
+    });
   }
 
   get fc() {
@@ -46,47 +52,46 @@ export class CheckoutPageComponent implements OnInit {
 
   onLocationClicked(latLng: LatLng) {
     this.locationService.getAddressFromLatLng(latLng).subscribe((res) => {
-      console.log('address', res.plus_code.compound_code);
       this.order.address = res.plus_code.compound_code;
-
       this.checkoutForm.patchValue({
-        address: this.order.address
+        address: this.order.address,
       });
     });
   }
 
   createOrder() {
     if (this.checkoutForm.invalid) {
+      console.log('invalid');
       let message: string = '';
       if (this.fc.name.invalid && this.fc.address.invalid) {
         message = 'Please fill both the fields';
-      }
-      if (this.fc.name.invalid) {
+      } else if (this.fc.name.invalid) {
         message = 'Please fill the name field';
       } else {
         message = 'Please fill the address field';
         this.toastrService.warning(message, 'Invalid Inputs');
         return;
       }
-
-      if (!this.order.addressLatLng) {
-        this.toastrService.warning(
-          'Please select your location on the map',
-          'Location'
-        );
-        return;
-      }
-
-      this.order.name = this.fc.name.value;
-      this.order.address = this.fc.address.value;
-      this.orderService.create(this.order).subscribe({
-        next: () => {
-          this.router.navigateByUrl('/payment');
-        },
-        error: (err) => {
-          this.toastrService.error(err.error, 'Cart');
-        },
-      });
     }
+
+    if (!this.order.addressLatLng) {
+      console.log('No location');
+      this.toastrService.warning(
+        'Please select your location on the map',
+        'Location'
+      );
+      return;
+    }
+
+    this.order.name = this.fc.name.value;
+    this.order.address = this.fc.address.value;
+    this.orderService.create(this.order).subscribe({
+      next: () => {
+        this.router.navigateByUrl('/payment');
+      },
+      error: (err) => {
+        this.toastrService.error(err.error, 'Cart');
+      },
+    });
   }
 }

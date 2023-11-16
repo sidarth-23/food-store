@@ -1,4 +1,4 @@
 <div>
-    <input #s type="text" placeholder="Search (NOTE: Enter name, not tags)" (keyup.enter)="search(s.value)" [value]="searchTerm" maxlength="50">
+    <input #s type="text" placeholder="Search (NOTE: Enter name, not tags)" (keyup.enter)="search(s.value)" [value]="searchTerm" maxlength="30">
     <button (click)="search(s.value)">Search</button>
 </div>

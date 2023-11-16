@@ -7,11 +7,34 @@
 }
 
 .details {
-  width: 25rem;
+  width: 30rem;
 }
 
 .login {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.info {
+  font-size: 0.8rem;
+}
+
+.info p {
+  margin:0.4rem;
+}
+
+.password-info>* {
+  margin: 0.3rem 0;
+}
+
+.password-info ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 0 4rem;
+}
+
+.important {
+  color: red;
 }

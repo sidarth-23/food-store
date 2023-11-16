@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -22,19 +23,20 @@ import {
 } from 'leaflet';
 import { LocationService } from 'src/app/services/location.service';
 import { Order } from 'src/app/shared/models/Order';
-import {latLng} from 'leaflet';
+import { latLng } from 'leaflet';
 
 @Component({
   selector: 'map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
 })
-export class MapComponent implements OnChanges {
+export class MapComponent implements OnChanges, OnInit {
   @Output() locationClicked: EventEmitter<LatLng> = new EventEmitter<LatLng>();
   @Input()
   order!: Order;
   @Input()
   readonly = false;
+  private markerHasBeenSet = false;
   private readonly DEFAULT_LATLNG: LatLngTuple = [13.75, 21.62];
   private readonly MARKER_ZOOM_LEVEL = 16;
   private readonly MARKER_ICON = icon({
@@ -51,14 +53,28 @@ export class MapComponent implements OnChanges {
   currentMarker!: Marker;
   constructor(private locationService: LocationService) {}
 
+  ngOnInit(): void {
+    this.markerHasBeenSet = false;
+
+    if (this.order.addressLatLng) {
+      this.initializeMap(this.order.addressLatLng);
+    }
+  }
+
   ngOnChanges(): void {
     if (!this.order) return;
-    this.initializeMap();
 
     if (this.readonly && this.addressLatLng) {
       this.showLocationOnReadOnlyMode();
     }
+
+    // Check if the marker has not been set yet
+    if (!this.markerHasBeenSet && this.addressLatLng) {
+      this.initializeMap(this.addressLatLng);
+      this.markerHasBeenSet = true; // Set the flag to true to prevent further updates
+    }
   }
+
   showLocationOnReadOnlyMode() {
     const m = this.map;
     this.setMarker(this.addressLatLng);
@@ -74,7 +90,7 @@ export class MapComponent implements OnChanges {
     this.currentMarker.dragging?.disable();
   }
 
-  initializeMap() {
+  initializeMap(latLng?: LatLng) {
     if (this.map) return;
 
     this.map = map(this.mapRef.nativeElement, {
@@ -82,6 +98,14 @@ export class MapComponent implements OnChanges {
     }).setView(this.DEFAULT_LATLNG, 1);
 
     tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(this.map);
+
+    if (latLng) {
+      this.map.setView(latLng, this.MARKER_ZOOM_LEVEL);
+      this.setMarker(latLng);
+      this.markerHasBeenSet = true
+    } else {
+      this.map.setView(this.DEFAULT_LATLNG, 1);
+    }
 
     this.map.on('click', (e: LeafletMouseEvent) => {
       this.setMarker(e.latlng);
@@ -102,20 +126,26 @@ export class MapComponent implements OnChanges {
 
   setMarker(latlng: LatLngExpression) {
     this.addressLatLng = latlng as LatLng;
-    this.locationClicked.emit(this.addressLatLng)
-    if (this.currentMarker) {
-      this.currentMarker.setLatLng(latlng);
-      return;
+    this.locationClicked.emit(this.addressLatLng);
+
+    // Check if the marker has not been set yet
+    if (!this.markerHasBeenSet) {
+      if (this.currentMarker) {
+        this.currentMarker.setLatLng(latlng);
+        return;
+      }
+
+      this.currentMarker = marker(latlng, {
+        draggable: true,
+        icon: this.MARKER_ICON,
+      }).addTo(this.map);
+
+      this.currentMarker.on('dragend', () => {
+        this.addressLatLng = this.currentMarker.getLatLng();
+      });
+
+      this.markerHasBeenSet = true; // Set the flag to true to prevent further updates
     }
-
-    this.currentMarker = marker(latlng, {
-      draggable: true,
-      icon: this.MARKER_ICON,
-    }).addTo(this.map);
-
-    this.currentMarker.on('dragend', () => {
-      this.addressLatLng = this.currentMarker.getLatLng();
-    });
   }
 
   set addressLatLng(latlng: LatLng) {
