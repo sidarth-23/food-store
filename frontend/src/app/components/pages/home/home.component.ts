@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { FoodService } from 'src/app/services/food.service';
 import { UserService } from 'src/app/services/user.service';
 import { Food } from 'src/app/shared/models/Food';
-import { User } from 'src/app/shared/models/User';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +13,7 @@ import { User } from 'src/app/shared/models/User';
 export class HomeComponent implements OnInit {
   favouriteShown: boolean = false;
   foods: Food[] = [];
-  favourites!: string[];
+  favourites!: string[]
 
   constructor(
     private foodService: FoodService,
@@ -29,11 +28,15 @@ export class HomeComponent implements OnInit {
         );
       } else if (params.tag) {
         foodsObservable = this.foodService.getAllFoodsByTag(params.tag);
+
       } else if (this.activatedRoute.snapshot.url.toString().includes('favorites')) {
         foodsObservable = this.foodService.getAllFoodsById(
           this.userService.currentUser.favorites
         );
-      } else {
+      } else if (activatedRoute.snapshot.url.toString().includes('favorites')) {
+        foodsObservable = this.foodService.getAllFoodsById(this.userService.currentUser.favorites)
+      }
+       else {
         foodsObservable = foodService.getAll();
       }
 
@@ -44,8 +47,8 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.favouriteShown = this.userService.currentUser.token ? true : false;
-    this.favourites = this.userService.currentUser.favorites;
+    this.favouriteShown = this.userService.currentUser.token ? true : false
+    this.favourites = this.userService.currentUser.favorites
   }
 
   isFavorite(foodId: string): boolean {

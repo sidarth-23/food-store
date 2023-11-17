@@ -1,4 +1,5 @@
 import {
+  FOODS_BY_FAVOURITES,
   FOODS_BY_ID_URL,
   FOODS_BY_TAG_URL,
   FOODS_TAGS_URL,
@@ -15,7 +16,7 @@ import { FOODS_BY_SEARCH_URL, FOODS_URL } from '../shared/constants/urls';
   providedIn: 'root',
 })
 export class FoodService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient ) {}
 
   getAll(): Observable<Food[]> {
     return this.http.get<Food[]>(FOODS_URL);

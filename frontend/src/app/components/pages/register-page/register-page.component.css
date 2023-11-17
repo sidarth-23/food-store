@@ -21,7 +21,7 @@
 }
 
 .info p {
-  margin:0.4rem;
+  margin: 0.5rem 0;
 }
 
 .password-info>* {
@@ -36,5 +36,11 @@
 }
 
 .important {
+  padding:0 0.5rem;
+}
+
+
+
+.asterix {
   color: red;
 }
