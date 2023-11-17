@@ -1,8 +1,7 @@
 import { Router } from "express";
-import { sample_foods} from "../data";
+import { sample_foods, sample_tags } from "../data";
 import asyncHandler from 'express-async-handler'
 import { FoodModel } from "../models/food.model";
-
 
 const router = Router();
 
@@ -70,6 +69,5 @@ router.get("/:foodId", asyncHandler(async(req, res) => {
   const food = await FoodModel.findById(req.params.foodId)
   res.send(food)
 }));
-
 
 export default router

@@ -1,5 +1,9 @@
 .error-list {
   color: red;
-  text-align: center;
+  text-align: left;
   font-size: 0.95rem;
+}
+
+.error-list>div::before{
+  content: '=>';
 }

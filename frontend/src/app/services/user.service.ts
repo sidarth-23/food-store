@@ -111,17 +111,10 @@ export class UserService {
     return this.http.post<User>(TOGGLE_FAVOURITES_URL, { foodId, userId }).pipe(
       tap({
         next: (item) => {
-          let message: string
           const updatedUser = this.GetUserFromLocalStorage();
-          if (updatedUser.favorites.length > item.favorites.length) {
-            message = 'Wishlisted item deleted :('
-            this.toastrService.warning(message, 'Favourites modified');
-          } else {
-            message = 'Item added to wishlist :)'
-            this.toastrService.success(message, 'Favourites modified');
-          }
           updatedUser.favorites = item.favorites
           this.setUserAndNotify(updatedUser);
+          this.toastrService.success('Favorite status updated successfully.');
         },
         error: (error) => {
           this.toastrService.error(

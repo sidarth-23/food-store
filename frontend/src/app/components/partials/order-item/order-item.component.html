@@ -2,7 +2,8 @@
   <table class="order-table">
     <tr>
       <td colspan="4">
-        <app-title [title]="item.id.toString()"></app-title>
+        <app-title [fontSize]="'1rem'" [title]="'Order Id'"></app-title>
+          <app-title [title]="item.id.toString()"></app-title>
       </td>
     </tr>
     <tr>
@@ -11,8 +12,8 @@
         <p><strong>Address: </strong>{{ item.address }}</p>
       </td>
       <td class="detail-container" colspan="2">
-        <p><strong>Status: </strong> {{item.status}}</p>
-        <p><strong>Order Date: </strong> {{item.createdAt | date}}</p>
+        <p><strong>Status: </strong> {{ item.status }}</p>
+        <p><strong>Order Date: </strong> {{ item.createdAt | date }}</p>
       </td>
     </tr>
     <tr>
@@ -31,23 +32,23 @@
     </tr>
     <tr *ngFor="let i of item.items">
       <td class="item-container" colspan="1">
-          {{ i.food.name }}
+        {{ i.food.name }}
       </td>
       <td class="item-container" colspan="1">
-        {{i.food.price}}
+        {{ i.food.price }}
       </td>
       <td class="item-container" colspan="1">
-        {{i.quantity}}
+        {{ i.quantity }}
       </td>
       <td class="item-container" colspan="1">
-        {{i.price}}
+        {{ i.price }}
       </td>
     </tr>
     <tr>
       <td class="item-container" colspan="2"></td>
       <td class="item-container" colspan="1"><b>Total Price</b></td>
       <td class="item-container" colspan="1">
-        {{item.totalPrice}}
+        {{ item.totalPrice }}
       </td>
     </tr>
   </table>

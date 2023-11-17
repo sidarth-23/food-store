@@ -7,6 +7,7 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserService } from '../services/user.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -17,7 +18,14 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     const user = this.userService.currentUser;
-    if (user.token) {
+    const isGoogleRequest = request.url.includes('google');
+
+    if (isGoogleRequest) {
+      const apiKey = environment.mapApi;
+      const separator = request.url.includes('?') ? '&' : '?';
+      const modifiedUrl = `${request.url}${separator}key=${apiKey}`;
+      request = request.clone({ url: modifiedUrl });
+    } else if (user.token && !isGoogleRequest) {
       request = request.clone({
         setHeaders: {
           access_token: user.token,

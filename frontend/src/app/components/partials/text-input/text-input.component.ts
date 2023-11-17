@@ -22,6 +22,7 @@ export class TextInputComponent {
   @Input()
   spanElement: string = ''
 
+
   get formControl() {
     return this.control as FormControl;
   }

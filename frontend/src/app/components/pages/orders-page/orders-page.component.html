@@ -1,5 +1,5 @@
 <div *ngFor="let order of orders">
   <order-item [item]="order"></order-item>
 </div>
-<app-title *ngIf="orders?.length === 0" title="No Orders as of yet!!"></app-title>
+<app-title *ngIf="orders.length === 0" title="No Orders as of yet!!"></app-title>
 

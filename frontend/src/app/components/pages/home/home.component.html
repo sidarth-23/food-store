@@ -17,14 +17,7 @@
         <div class="name">
           {{ food.name }}
         </div>
-        <span
-          class="favorite"
-          (click)="onClickFavourite(food.id, $event)"
-          *ngIf="favouriteShown"
-          [ngClass]="{ not: !isFavorite(food.id) }"
-        >
-          ❤
-        </span>
+        <span class="favorite" (click)="onClickFavourite(food.id, $event)" *ngIf="favouriteShown" [ngClass]="{ not: !isFavorite(food.id)}"> ❤ </span>
         <div class="stars">
           <star-rating [stars]="food.stars"></star-rating>
         </div>
@@ -34,7 +27,11 @@
               {{ origin }}
             </span>
           </div>
-          <div class="cook-time">{{ food.cookTime }} min</div>
+
+          <div class="cook-time">
+            {{ food.cookTime }}  min
+          </div>
+
           <div class="price">
             <span>
               {{ food.price | currency }}

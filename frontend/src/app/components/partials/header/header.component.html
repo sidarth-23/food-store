@@ -4,10 +4,10 @@
     <nav>
       <ul>
         <li *ngIf="!isAuth">
-          <a routerLink="/register">Register</a>
+          <a routerLink="/login">Login</a>
         </li>
         <li *ngIf="!isAuth">
-          <a routerLink="/login">Login</a>
+          <a routerLink="/register">Register</a>
         </li>
         <li *ngIf="isAuth" class="menu-container">
           <a routerLink="/dashboard">

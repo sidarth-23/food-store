@@ -13,13 +13,13 @@ label {
   color: #5f5f5f;
 }
 
-label span {
-  color: red;
-}
-
 .content {
   padding: 0 0.5rem;
   height: 2.7rem;
   display: flex;
   align-items: center;
+}
+
+.asterix {
+  color: red;
 }
