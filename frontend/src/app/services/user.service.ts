@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, switchMap, tap, throwError } from 'rxjs';
 import { User } from '../shared/models/User';
 import { IUserLogin } from '../shared/interfaces/IUserLogin';
 import { IUserRegister } from '../shared/interfaces/IuserRegister';
@@ -14,6 +14,7 @@ import {
   TOGGLE_FAVOURITES_URL,
 } from '../shared/constants/urls';
 import { IUserUpdate } from '../shared/interfaces/IUserUpdate';
+import { ActivatedRoute } from '@angular/router';
 
 const USER_KEY = 'User';
 
@@ -29,7 +30,7 @@ export class UserService {
   private userSubject = new BehaviorSubject<User>(new User());
   public userObservable: Observable<User>;
 
-  constructor(private http: HttpClient, private toastrService: ToastrService) {
+  constructor(private http: HttpClient, private toastrService: ToastrService, private activatedRoute: ActivatedRoute) {
     this.userObservable = this.userSubject.asObservable();
 
     const initialUser = this.GetUserFromLocalStorage();
@@ -77,18 +78,25 @@ export class UserService {
 
   updateUser(userUpdate: IUserUpdate): Observable<any> {
     return this.http.post<any>(USER_UPDATE_URL, userUpdate).pipe(
-      tap({
-        next: (updatedUser) => {
-          this.setUserAndNotify(updatedUser);
-          this.toastrService.success(
-            'User updated successfully. Relogin to see the updated changes'
-          );
-        },
-        error: (err) => {
-          this.toastrService.error(err.error, 'Update Failed');
-        },
+      switchMap((updatedUser) => {
+        return this.handleUserUpdate(updatedUser);
+      }),
+      catchError((err) => {
+        this.toastrService.error(err.error, 'Update Failed');
+        return throwError(err);
       })
     );
+  }
+  
+  private handleUserUpdate(updatedUser: any): Observable<any> {
+    return new Observable((observer) => {
+      this.setUserAndNotify(updatedUser);
+      this.toastrService.success(
+        'User data updated successfully', 'Update Success'
+      );
+      observer.next(updatedUser);
+      observer.complete();
+    });
   }
 
   updatePass(userLogin: PassChange): Observable<any> {
@@ -97,7 +105,7 @@ export class UserService {
         next: (updatedUser) => {
           this.setUserAndNotify(updatedUser);
           this.toastrService.success(
-            'User updated successfully. Relogin to see the updated changes'
+            'User password updated successfully', 'Update Success'
           );
         },
         error: (err) => {
@@ -112,9 +120,13 @@ export class UserService {
       tap({
         next: (item) => {
           const updatedUser = this.GetUserFromLocalStorage();
+          if (updatedUser.favorites.length > item.favorites.length) {
+            this.toastrService.warning('Favorite item deleted :(');
+          } else {
+            this.toastrService.success('Favorite item added :)');
+          }
           updatedUser.favorites = item.favorites
           this.setUserAndNotify(updatedUser);
-          this.toastrService.success('Favorite status updated successfully.');
         },
         error: (error) => {
           this.toastrService.error(

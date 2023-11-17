@@ -18,13 +18,41 @@ input:focus {
   border-width: 2.9px;
 }
 
-input-validation {
+.input-validation {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  right: 1rem;
   height: 100%;
   width: 12rem;
 }
+
+.not-small {
+  width: 100%;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.small {
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  right: 1rem;
+}
+
+:host([largeInput]) input {
+  width: 100%;
+}
+
+/* Add this style to move errors below the input when largeInput is true */
+:host([largeInput]) .content {
+  flex-direction: column;
+}
+
+/* Add this style to adjust the height of the container when largeInput is true */
+:host([largeInput]) .container {
+  height: auto;
+}
+
+.large-input {
+  width: 100%;
+}
+

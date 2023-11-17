@@ -1,9 +1,11 @@
-<input-container [label]="label" [spanEl]="spanElement">
-  <div>
-    <input [type]="type" [placeholder]="label" [formControl]="formControl" [maxlength]="max" [disabled]="disabled"/>
+<input-container [label]="label" [spanEl]="spanElement" [largeInput]="largeInput">
+  <div  [ngClass]="{ 'large-input': largeInput }">
+    <input [type]="type" [placeholder]="label" [formControl]="formControl" [maxlength]="max" (keypress)="checkInput($event)"/>
   </div>
-  <input-validation
+  <div class="input-validation" [ngClass]="{'small': !largeInput, 'not-small' : largeInput}">
+    <input-validation
     [control]="control"
     [showErrorsWhen]="showErrorsWhen"
   ></input-validation>
+  </div>
 </input-container>

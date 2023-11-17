@@ -23,3 +23,24 @@ label {
 .asterix {
   color: red;
 }
+
+/* Add this style to adjust the height of the container when largeInput is true */
+.large-input {
+  height: auto;
+}
+
+/* Add this style to move label and asterix to the top when largeInput is true */
+.large-input label {
+  margin-bottom: 0.5rem;
+}
+
+.large-input .asterix {
+  margin-top: 0.5rem;
+}
+
+.large-input .content {
+  flex-direction: column;
+  gap: 0.5rem;
+  height: auto;
+  padding-bottom: 0.3rem;
+}

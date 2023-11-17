@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { AbstractControl, FormControl } from '@angular/forms';
 
 @Component({
@@ -18,9 +18,22 @@ export class TextInputComponent {
   @Input()
   max!: string
   @Input()
-  disabled: boolean = false
-  @Input()
   spanElement: string = ''
+  @Input()
+  largeInput: boolean = false
+  @Input()
+  onlyLetters: boolean = false
+  
+  @HostListener('keypress', ['$event'])
+  checkInput(event: KeyboardEvent): boolean {
+    const key = event.keyCode;
+    if (!this.onlyLetters) return true
+    return (
+      (key >= 65 && key <= 90) || // A-Z
+      (key >= 97 && key <= 122) || // a-z
+      key === 8 // Backspace
+    );
+  }
 
 
   get formControl() {

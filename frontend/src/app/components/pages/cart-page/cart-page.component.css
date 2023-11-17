@@ -121,3 +121,8 @@ li .remove-button:hover {
   opacity: 1;
   cursor: pointer;
 }
+
+.quantity-field {
+  font-size: 0.9rem;
+  width: 4rem;
+}

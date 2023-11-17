@@ -12,4 +12,6 @@ export class InputContainerComponent {
   bgColor = 'white';
   @Input()
   spanEl: string = ''
+  @Input()
+  largeInput: boolean = false
 }

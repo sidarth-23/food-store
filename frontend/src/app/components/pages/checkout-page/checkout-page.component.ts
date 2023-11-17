@@ -52,7 +52,14 @@ export class CheckoutPageComponent implements OnInit {
 
   onLocationClicked(latLng: LatLng) {
     this.locationService.getAddressFromLatLng(latLng).subscribe((res) => {
-      this.order.address = res.plus_code.compound_code;
+      console.log(res)
+      this.order.address = ''
+      res.results[0].address_components.forEach(item => {
+        if (this.order.address === '') {
+          this.order.address = `${item.long_name}`;
+          return
+        }
+        this.order.address += `, ${item.long_name}`});
       this.checkoutForm.patchValue({
         address: this.order.address,
       });

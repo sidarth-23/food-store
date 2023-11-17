@@ -65,15 +65,14 @@ export class ProfilePageComponent {
       address: fv.address
     };
 
-    this.userService.updateUser(user).subscribe(_ => {
-      console.log('returnUrl',this.returnUrl)
+    this.userService.updateUser(user).subscribe(() => {
       this.router.navigateByUrl(this.returnUrl);
     })
   }
 
   submitPass() {
     this.isSubmitted = true;
-    if (this.passForm.invalid) return; // Corrected the form name here
+    if (this.passForm.invalid) return; 
 
     const fv = this.passForm.value;
     const user = {
@@ -81,8 +80,7 @@ export class ProfilePageComponent {
       password: fv.password
     };
 
-    this.userService.updatePass(user).subscribe(_ => {
-      console.log('returnUrl', this.returnUrl)
+    this.userService.updatePass(user).subscribe((updatedUser) => {
       this.router.navigateByUrl(this.returnUrl);
     })
   }

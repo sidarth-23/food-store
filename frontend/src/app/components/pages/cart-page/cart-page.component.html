@@ -15,17 +15,15 @@
           cartItem.food.name
         }}</a>
       </div>
-      <select
+      <input
         #quantitySelect
+        class="quantity-field"
+        type="text"
+        maxlength="3"
+        (keypress)="checkNumber($event)"
         [value]="cartItem.quantity"
         (change)="changeQuantity(cartItem, quantitySelect.value)"
-      >
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
-      </select>
+      />
       <div>
         {{ cartItem.price | currency }}
       </div>

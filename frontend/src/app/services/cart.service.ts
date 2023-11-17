@@ -15,12 +15,15 @@ export class CartService {
   constructor(private toastrService: ToastrService) {}
 
   addToCart(food: Food): void {
-    let cartItem = this.cart.item.find((item) => item.food.id === food.id);
-    if (cartItem) {
+    let cartItem = this.cart.item.findIndex((item) => item.food.id === food.id);
+    if (cartItem !== -1) {
+      this.cart.item[cartItem].quantity += 1
+      this.toastrService.success('Quantity added successfully', 'Item Added')
       return;
+    } else {
+      this.cart.item.push(new CartItem(food));
+      this.toastrService.success('Item successfully added to cart', 'Item Added')
     }
-    this.cart.item.push(new CartItem(food));
-    this.toastrService.success('Item successfully added to cart', 'Item Added')
     this.setCartToLocalStorage();
   }
 

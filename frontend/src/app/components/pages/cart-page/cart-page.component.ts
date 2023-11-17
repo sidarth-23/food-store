@@ -25,4 +25,13 @@ export class CartPageComponent {
     const quantity = parseInt(quantityInString);
     this.cartService.changeQuantity(cartItem.food.id, quantity);
   }
+
+  checkNumber(event: KeyboardEvent) {
+    const input = event.key;
+  const isNumber = /^[0-9]$/.test(input);
+
+  if (!isNumber) {
+    event.preventDefault();
+  }
+  }
 }

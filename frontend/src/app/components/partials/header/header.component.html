@@ -3,14 +3,14 @@
     <a routerLink="/">Food Mine!</a>
     <nav>
       <ul>
-        <li *ngIf="!isAuth">
+        <li *ngIf="!authState">
           <a routerLink="/login">Login</a>
         </li>
-        <li *ngIf="!isAuth">
+        <li *ngIf="!authState">
           <a routerLink="/register">Register</a>
         </li>
-        <li *ngIf="isAuth" class="menu-container">
-          <a routerLink="/dashboard">
+        <li *ngIf="authState" class="menu-container">
+          <a>
             {{ user.name }}
           </a>
           <div class="menu">
@@ -19,7 +19,7 @@
             <a (click)="logout()">Logout</a>
           </div>
         </li>
-        <li *ngIf="isAuth">
+        <li *ngIf="authState">
           <a routerLink="/cart-page"
             >Cart <span *ngIf="cartQuantity">{{ cartQuantity }}</span></a
           >

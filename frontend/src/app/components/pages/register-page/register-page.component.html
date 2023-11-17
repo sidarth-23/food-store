@@ -2,13 +2,25 @@
   <div class="details">
     <app-title title="Register"></app-title>
     <form [formGroup]="registerForm" (ngSubmit)="submit()">
-      <text-input
-        [control]="fc.name"
-        [showErrorsWhen]="fc.name.touched"
-        label="Name"
-        max="30"
-        spanElement="*"
-      ></text-input>
+      <div class="half-box">
+        <text-input
+          [control]="fc.firstName"
+          [showErrorsWhen]="fc.firstName.touched"
+          label="First Name"
+          max="30"
+          spanElement="*"
+          [onlyLetters]="true"
+          [largeInput]="true"
+        ></text-input>
+        <text-input
+          [control]="fc.lastName"
+          [showErrorsWhen]="fc.lastName.touched"
+          label="Last Name"
+          max="10"
+          [onlyLetters]="true"
+          [largeInput]="true"
+        ></text-input>
+      </div>
       <text-input
         [control]="fc.email"
         [showErrorsWhen]="fc.email.touched"
@@ -17,28 +29,33 @@
         max="40"
         spanElement="*"
       ></text-input>
-      <text-input
-        [control]="fc.password"
-        [showErrorsWhen]="fc.password.touched"
-        label="Password"
-        type="password"
-        max="40"
-        spanElement="*"
-      ></text-input>
-      <text-input
-        [control]="fc.confirmPassword"
-        [showErrorsWhen]="fc.confirmPassword.touched"
-        label="Confirm Password"
-        type="password"
-        max="40"
-        spanElement="*"
-      ></text-input>
+      <div class="half-box">
+        <text-input
+          [control]="fc.password"
+          [showErrorsWhen]="fc.password.touched"
+          label="Password"
+          type="password"
+          max="40"
+          spanElement="*"
+          [largeInput]="true"
+        ></text-input>
+        <text-input
+          [control]="fc.confirmPassword"
+          [showErrorsWhen]="fc.confirmPassword.touched"
+          label="Confirm Password"
+          type="password"
+          max="40"
+          spanElement="*"
+          [largeInput]="true"
+        ></text-input>
+      </div>
       <text-input
         [control]="fc.address"
         [showErrorsWhen]="fc.address.touched"
         label="Address"
         max="100"
         spanElement="*"
+        [largeInput]="true"
       ></text-input>
       <div class="info">
         <p><span class="important">* </span>Required</p>

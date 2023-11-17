@@ -1,3 +1,4 @@
+
 import { Router } from "express";
 import { sample_users } from "../data";
 import jwt from "jsonwebtoken";
@@ -5,6 +6,7 @@ import asyncHandler from "express-async-handler";
 import { User, UserModel } from "../models/user.model";
 import { HTTP_BAD_REQUEST } from "../constants/http_status";
 import bcrypt from "bcryptjs";
+import authMid from "../middlewares/auth.mid";
 const router = Router();
 
 router.get(
@@ -62,6 +64,8 @@ router.post(
   })
 );
 
+router.use(authMid)
+
 router.get('/user', asyncHandler(async (req: any, res) => {
   const user = await UserModel.findById(req.user.id);
   if (!user) {
@@ -73,17 +77,24 @@ router.get('/user', asyncHandler(async (req: any, res) => {
 
 router.post(
   "/updateUser",
-  asyncHandler(async (req, res) => {
-    const { name, email, address } = req.body;
-    const user = await UserModel.findOne({ email });
-    if (!user) {
-      res.status(HTTP_BAD_REQUEST).send("User not found. Please try again!");
-      return;
-    }
+  async (req: any, res) => {
+      const { name, email, address } = req.body;
+      const user = await UserModel.findOne({ email });
 
-    const dbUser = await UserModel.updateOne({email}, {name, address});
-    res.send(dbUser);
-  })
+      if (!user) {
+        return res.status(HTTP_BAD_REQUEST).send("User not found. Please try again!");
+      }
+
+      const dbUser = await UserModel.updateOne({ email }, { name, address });
+
+      if (!dbUser) {
+        // No documents were modified, handle accordingly
+        return res.status(HTTP_BAD_REQUEST).send("User data not updated.");
+      }
+      const tempData = await UserModel.findOne({email})
+      res.send(tempData);
+
+  }
 );
 
 router.post(
@@ -99,7 +110,11 @@ router.post(
     const encryptedPassword = await bcrypt.hash(password, 10);
 
     const dbUser = await UserModel.updateOne({email}, {password: encryptedPassword});
-    res.send(dbUser);
+    const updatedUser = {
+      ...user.toObject(),
+      password: encryptedPassword,
+    };
+    res.send(updatedUser);
   })
 );
 

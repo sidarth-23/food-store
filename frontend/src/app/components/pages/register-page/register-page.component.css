@@ -4,6 +4,7 @@
   align-items: center;
   height: 100%;
   margin-top: 3rem;
+  margin-bottom: 3rem;
 }
 
 .details {
@@ -37,4 +38,10 @@
 
 .important {
   color: red;
+}
+
+.half-box {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.4rem;
 }
