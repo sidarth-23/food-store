@@ -18,18 +18,18 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private foodService: FoodService,
-    activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private userService: UserService
   ) {
     let foodsObservable: Observable<Food[]>;
-    activatedRoute.params.subscribe((params) => {
+    this.activatedRoute.params.subscribe((params) => {
       if (params.searchTerm) {
         foodsObservable = this.foodService.getAllFoodsBySearchTerm(
           params.searchTerm
         );
       } else if (params.tag) {
         foodsObservable = this.foodService.getAllFoodsByTag(params.tag);
-      } else if (activatedRoute.snapshot.url.toString().includes('favorites')) {
+      } else if (this.activatedRoute.snapshot.url.toString().includes('favorites')) {
         foodsObservable = this.foodService.getAllFoodsById(
           this.userService.currentUser.favorites
         );
@@ -58,8 +58,10 @@ export class HomeComponent implements OnInit {
     this.userService.toggleFavourites(id, userId).subscribe(
       (updatedUser) => {
         this.favourites = updatedUser.favorites;
-        if (!this.favourites.includes(id)) {
-          this.foods = this.foods.filter((food) => food.id !== id);
+        if (this.activatedRoute.snapshot.url.toString().includes('favorites')) {
+          if (!this.favourites.includes(id)) {
+            this.foods = this.foods.filter((food) => food.id !== id);
+          }
         }
       },
       (error) => {

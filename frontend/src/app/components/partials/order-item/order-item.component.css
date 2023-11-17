@@ -2,6 +2,7 @@
   width: 80%;
   margin: auto;
   overflow-x: auto;
+  border-radius: 10px;
 }
 
 .order-table {
@@ -9,10 +10,12 @@
   border-collapse: collapse;
   margin-top: 20px;
   margin-bottom: 50px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
 }
 
 .order-table td {
-  border: 1px solid #ddd;
+  /* border: 1px solid #ddd; */
   padding: 8px;
   text-align: left;
   border-radius: 10px;
