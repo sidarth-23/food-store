@@ -1,6 +1,6 @@
 <input-container [label]="label" [spanEl]="spanElement">
   <div>
-    <input [type]="type" [placeholder]="label" [formControl]="formControl" [maxlength]="max" [disabled]="disabled"/>
+    <input [type]="type" [placeholder]="label" [formControl]="formControl" [maxlength]="max" [disabled]="disabled" (keypress)="onKeyPress($event)"/>
   </div>
   <input-validation
     [control]="control"

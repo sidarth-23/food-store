@@ -111,9 +111,14 @@ ul {
   justify-content: center;
   align-items: center;
   margin-top: 3rem;
-    margin-bottom: 1.5rem;
-    background-color: #e72929;
-    opacity: 0.8;
-    color: white;
-    border-radius: 1rem;
+  margin-bottom: 1.5rem;
+  background-color: #e72929;
+  opacity: 0.8;
+  color: white;
+  border-radius: 1rem;
+}
+
+.container a:hover {
+  opacity: 1;
+  cursor: pointer;
 }

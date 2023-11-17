@@ -23,3 +23,7 @@ label span {
   display: flex;
   align-items: center;
 }
+
+.asterix {
+  color: red;
+}

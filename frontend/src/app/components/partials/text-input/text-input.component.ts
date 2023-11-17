@@ -21,8 +21,18 @@ export class TextInputComponent {
   disabled: boolean = false
   @Input()
   spanElement: string = ''
+  @Input()
+  onlyLetter: boolean = false
+
 
   get formControl() {
     return this.control as FormControl;
+  }
+
+  onKeyPress(event: KeyboardEvent) {
+    if (!this.onlyLetter) return true
+
+    const key = event.keyCode
+    return ((key >= 65 && key <= 90) || (key >= 97 && key <= 122) || key == 8)
   }
 }

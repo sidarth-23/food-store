@@ -7,7 +7,7 @@
 }
 
 .details {
-  width: 25rem;
+  width: 30rem;
 }
 
 .login {
@@ -18,12 +18,28 @@
 
 .info {
   font-size: 0.8rem;
-  padding:0 0.5rem;
 }
 
 .info p {
   margin: 0.5rem 0;
 }
+
+.password-info>* {
+  margin: 0.3rem 0;
+}
+
+.password-info ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 0 4rem;
+}
+
+.important {
+  padding:0 0.5rem;
+}
+
+
 
 .asterix {
   color: red;
