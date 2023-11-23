@@ -34,7 +34,9 @@ export class UserService {
     this.userObservable = this.userSubject.asObservable();
 
     const initialUser = this.GetUserFromLocalStorage();
-    this.userSubject.next(initialUser);
+    if (initialUser.token) {
+      this.userSubject.next(initialUser);
+    }
   }
 
   public get currentUser(): User {
@@ -78,25 +80,18 @@ export class UserService {
 
   updateUser(userUpdate: IUserUpdate): Observable<any> {
     return this.http.post<any>(USER_UPDATE_URL, userUpdate).pipe(
-      switchMap((updatedUser) => {
-        return this.handleUserUpdate(updatedUser);
-      }),
-      catchError((err) => {
-        this.toastrService.error(err.error, 'Update Failed');
-        return throwError(err);
+      tap({
+        next: (updatedUser) => {
+          this.setUserAndNotify(updatedUser);
+          this.toastrService.success(
+            'User updated successfully. Relogin to see the updated changes'
+          );
+        },
+        error: (err) => {
+          this.toastrService.error(err.error, 'Update Failed');
+        },
       })
     );
-  }
-  
-  private handleUserUpdate(updatedUser: any): Observable<any> {
-    return new Observable((observer) => {
-      this.setUserAndNotify(updatedUser);
-      this.toastrService.success(
-        'User data updated successfully', 'Update Success'
-      );
-      observer.next(updatedUser);
-      observer.complete();
-    });
   }
 
   updatePass(userLogin: PassChange): Observable<any> {
@@ -105,7 +100,7 @@ export class UserService {
         next: (updatedUser) => {
           this.setUserAndNotify(updatedUser);
           this.toastrService.success(
-            'User password updated successfully', 'Update Success'
+            'User updated successfully. Relogin to see the updated changes'
           );
         },
         error: (err) => {
@@ -146,12 +141,14 @@ export class UserService {
 
   private setUserAndNotify(updatedUser: User) {
     this.setUserToLocalStorage(updatedUser);
-    this.userSubject.next(updatedUser);
+    if (updatedUser.token) {
+      this.userSubject.next(updatedUser);
+    }
   }
 
   private setUserToLocalStorage(user: User) {
-    const currentUser = { ...this.userSubject.value };
-    const updatedUser = { ...currentUser, ...user };
+    const currentUsers = { ...this.userSubject.value };
+    const updatedUser = { ...currentUsers, ...user };
     localStorage.setItem(USER_KEY, JSON.stringify(updatedUser));
     this.userSubject.next(updatedUser);
   }
@@ -159,10 +156,7 @@ export class UserService {
   private GetUserFromLocalStorage(): User {
     const userJson = localStorage.getItem(USER_KEY);
     const user = userJson ? (JSON.parse(userJson) as User) : new User();
-
-    // Make sure to set the userSubject after the user object is fully initialized
     this.userSubject.next(user);
-
     return user;
   }
 }

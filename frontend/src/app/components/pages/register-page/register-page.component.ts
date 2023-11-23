@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { LocationService } from 'src/app/services/location.service';
 import { UserService } from 'src/app/services/user.service';
 import { IUserRegister } from 'src/app/shared/interfaces/IuserRegister'; 
 import { PasswordsMatchValidator } from 'src/app/shared/validators/password_match_validator';
@@ -20,13 +22,15 @@ export class RegisterPageComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
+    private locationService: LocationService,
+    private toastrService: ToastrService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) { }
 
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
-      firstName: ['', [Validators.required, Validators.minLength(5), Validators.pattern('[a-zA-Z]*')]],
+      firstName: ['', [Validators.required, Validators.minLength(3), Validators.pattern('[a-zA-Z]*')]],
       lastName: ['', [Validators.maxLength(10), Validators.pattern('[a-zA-Z]*')]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(5), PasswordStrengthValidator()]],
@@ -56,10 +60,17 @@ export class RegisterPageComponent implements OnInit {
       address: fv.address
     };
 
-    this.userService.register(user).subscribe(_ => {
-      console.log('returnUrl',this.returnUrl)
-      this.router.navigateByUrl(this.returnUrl);
-    })
+    this.locationService.getLocationFromAddress(user.address).subscribe(
+      (res) => {
+        if (res.status === 'ZERO_RESULTS') {
+          this.toastrService.error('Please enter a valid address', 'Invalid address')
+          return
+        }
+        this.userService.register(user).subscribe(_ => {
+          console.log('returnUrl',this.returnUrl)
+          this.router.navigateByUrl(this.returnUrl);
+        })
+      }
+    )
   }
-
 }

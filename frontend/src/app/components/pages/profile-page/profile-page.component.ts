@@ -1,3 +1,4 @@
+import { LocationService } from 'src/app/services/location.service';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -5,6 +6,7 @@ import { UserService } from 'src/app/services/user.service';
 import { IUserRegister } from 'src/app/shared/interfaces/IuserRegister';
 import { PasswordsMatchValidator } from 'src/app/shared/validators/password_match_validator';
 import { PasswordStrengthValidator } from 'src/app/shared/validators/password_strength_validator';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-profile-page',
@@ -20,6 +22,8 @@ export class ProfilePageComponent {
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
+    private locationService: LocationService,
+    private toastrService: ToastrService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) { }
@@ -27,6 +31,7 @@ export class ProfilePageComponent {
   ngOnInit(): void {
     this.profileForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(5), Validators.pattern('[a-zA-Z]*')]],
+      lastName: ['', [Validators.pattern('[a-zA-Z]*')]],
       email: ['', [Validators.required, Validators.email]],
       address: ['', [Validators.required, Validators.minLength(10)]]
     });
@@ -38,8 +43,10 @@ export class ProfilePageComponent {
       validators: PasswordsMatchValidator('password', 'confirmPass')
     });
     const currentUser = this.userService.currentUser;
+    const username = currentUser.name.slice().split(' ')
     this.profileForm.patchValue({
-      name: currentUser.name,
+      name: username[0].trim(),
+      lastName: username[1]?.trim() || '',
       email: currentUser.email,
       address: currentUser.address,
     });
@@ -59,14 +66,26 @@ export class ProfilePageComponent {
     if(this.profileForm.invalid) return;
 
     const fv= this.profileForm.value;
+    let nameToSend: string;
+    if (fv.lastName !== '') {
+      nameToSend = fv.name + ' ' + fv.lastName
+    } else {
+      nameToSend = fv.name
+    }
     const user = {
-      name: fv.name,
+      name: nameToSend,
       email: fv.email,
       address: fv.address
     };
 
-    this.userService.updateUser(user).subscribe(() => {
-      this.router.navigateByUrl(this.returnUrl);
+    this.locationService.getLocationFromAddress(user.address).subscribe((res) => {
+      if (res.status === 'ZERO_RESULTS') {
+        this.toastrService.error('Please enter a valid address', 'Invalid address')
+        return
+      }
+      this.userService.updateUser(user).subscribe(() => {
+        this.router.navigateByUrl(this.returnUrl);
+      })
     })
   }
 
@@ -79,7 +98,6 @@ export class ProfilePageComponent {
       email: fv.email,
       password: fv.password
     };
-
     this.userService.updatePass(user).subscribe((updatedUser) => {
       this.router.navigateByUrl(this.returnUrl);
     })

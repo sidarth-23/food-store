@@ -2,17 +2,30 @@
   <div class="details">
     <app-title title="Update details"></app-title>
     <form [formGroup]="profileForm" (ngSubmit)="submit()">
-      <text-input
+      <div class="flex">
+        <text-input
         [control]="fc.name"
         [showErrorsWhen]="fc.name.touched"
-        label="Name"
+        label="First Name"
         max="15"
+        [largeInput]="true"
+        [onlyLetters]="true"
       ></text-input>
+      <text-input
+        [control]="fc.lastName"
+        [showErrorsWhen]="fc.lastName.touched"
+        label="Last Name"
+        max="15"
+        [largeInput]="true"
+        [onlyLetters]="true"
+      ></text-input>
+      </div>
       <text-input
         [control]="fc.address"
         [showErrorsWhen]="fc.address.touched"
         label="Address"
         max="50"
+        [largeInput]="true"
       ></text-input>
       <default-button text="Update Details"></default-button>
     </form>
@@ -26,6 +39,7 @@
         label="Password"
         type="password"
         max="20"
+        [largeInput]="true"
       ></text-input>
       <text-input
         [control]="passForm.controls.confirmPass"
@@ -33,6 +47,7 @@
         label="Confirm Password"
         type="password"
         max="20"
+        [largeInput]="true"
       ></text-input>
       <input type="hidden" formControlName="email">
       <default-button text="Update Password"></default-button>

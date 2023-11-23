@@ -17,4 +17,8 @@
     </div>
     <order-items-list [order]="order"></order-items-list>
   </div>
+  <div *ngIf="order.addressLatLng" class="map">
+    <app-title title="Location to be delivered" fontSize="1.6rem"></app-title>
+    <map [readonly]="true" [order]="order"></map>
+  </div>
 </div>

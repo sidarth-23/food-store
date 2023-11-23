@@ -58,6 +58,9 @@ export class MapComponent implements OnChanges, OnInit {
 
     if (this.order.addressLatLng) {
       this.initializeMap(this.order.addressLatLng);
+      if (this.readonly) {
+        this.showLocationOnReadOnlyMode()
+      }
     }
   }
 

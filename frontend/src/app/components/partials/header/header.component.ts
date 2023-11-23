@@ -8,32 +8,31 @@ import { User } from 'src/app/shared/models/User';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent implements OnInit, OnChanges{
+export class HeaderComponent implements OnInit{
+  authState!: boolean;
+  cartQuantity = 0;
+  user!: User;
+  constructor(
+    private cartService: CartService,
+    private userService: UserService
+  ) {}
 
-  authState!: boolean
-  cartQuantity=0;
-  user!:User;
-  constructor(private cartService:CartService,private userService:UserService) {
-   }
-
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.cartService.getCartObservable().subscribe((newCart) => {
       this.cartQuantity = newCart.totalCount;
-    })
+    });
     this.userService.userObservable.subscribe((newUser) => {
-      this.authState = newUser.token ? true : false
       this.user = newUser;
-    })
-   }
+      console.log(this.user)
+      this.authState = this.user.token ? true : false;
+    });
+  }
 
-   ngOnChanges(changes: SimpleChanges): void {
-   }
-
-  logout(){
+  logout() {
     this.userService.logout();
   }
 
-  get isAuth(){
+  get isAuth() {
     return this.user.token;
   }
 }

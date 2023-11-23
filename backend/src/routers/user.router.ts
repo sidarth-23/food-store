@@ -106,7 +106,7 @@ router.post(
       res.status(HTTP_BAD_REQUEST).send("User not found. Please try again!");
       return;
     }
-
+    
     const encryptedPassword = await bcrypt.hash(password, 10);
 
     const dbUser = await UserModel.updateOne({email}, {password: encryptedPassword});
